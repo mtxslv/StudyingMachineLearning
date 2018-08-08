@@ -1,0 +1,83 @@
+# Trying to write a code that makes a linearly regression
+# by TheAssis
+# importações necessárias para rodar o código
+
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+
+#nessa célula importamos o dataset, oriundo da nuvem
+#orivas mandou esses dados
+
+import os
+import tarfile
+from six.moves import urllib
+
+FILE_TO_DOWNLOAD =  "Salary_Data.csv"
+DOWNLOAD_ROOT = "https://github.com/ect-info/ml/raw/master/"
+DATA_PATH = "dados/"
+DATA_URL = DOWNLOAD_ROOT + DATA_PATH + FILE_TO_DOWNLOAD
+
+def fetch_data(data_url=DATA_URL, data_path=DATA_PATH, file_to_download=FILE_TO_DOWNLOAD):
+  if not os.path.isdir(data_path):
+    os.makedirs(data_path)
+  urllib.request.urlretrieve(data_url, data_path+"Salary_Data.csv")
+  
+  
+fetch_data()
+
+# observando se o diretório datasets foi criado com sucesso 
+!ls dados
+
+# tem que fazer essa parte, ainda não sei a razão
+import pandas as pd
+
+def load_data(data_path=DATA_PATH, file_to_download=FILE_TO_DOWNLOAD):
+  csv_path = os.path.join(data_path,file_to_download)
+  return pd.read_csv(csv_path)
+
+salary_data = load_data()
+
+salary_data.head()
+
+# Separando os dados para a variável independente e para variável dependete 
+X = salary_data.iloc[:,:-1].values
+Y = salary_data.iloc[:, 1].values
+
+#print(X);
+#print('\n \n \n')
+#print(y)
+
+# A variável independente é os anos de experiência
+# A variável dependente é o salário
+
+#print('mostrar dados: \n',salary_data.YearsExperience)
+
+# Split the data into training/testing sets
+
+#pro treinamento
+salary_x_treinamento = X
+salary_y_treinamento = Y
+
+#pro teste
+salary_x_teste = X
+salary_y_teste = Y
+
+#print('mostrar dados: \n',salary_x_treinamento)
+
+# Train the model using the training sets
+regr.fit(salary_x_treinamento, salary_y_treinamento)
+salary_y_pred = regr.predict(salary_x_teste)
+
+# Plot outputs
+plt.scatter(salary_x_teste, salary_y_teste,  color='black')
+plt.plot(salary_x_teste, salary_y_pred, color='blue', linewidth=3)
+
+#plt.xticks(())
+#plt.yticks(())
+
+plt.show()
+
+# O comando X[:-20] significa "pegue todos os elementos menos os
+#  os últimos 20"
