@@ -98,6 +98,9 @@ print('Variance score: %.2f' % r2_score(y_teste, y_pred))
 plt.scatter(X_teste, y_teste,  color='black')
 plt.scatter(X_teste, y_pred, color='blue', linewidth=3)
 
+plt.scatter(X_treino, y_treino,  color='green')
+
+
 plt.xticks(())
 plt.yticks(())
 plt.ylabel('Velocidade')
