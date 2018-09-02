@@ -14,7 +14,9 @@ epoch = 1;
 
 # fase de treino do perceptron
 
-while flag!=0 or epoch <= 5:
+while flag!=0 or epoch <= 5: # Tal condição está incorreta
+  # A condição correta é quando a época chegou a 5 ou
+  # se nenhum erro foi encontrado
   print("\n na epoca", epoch, "temos: ")
   flag = 0;
   for i in range (0,2):
