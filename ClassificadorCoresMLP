@@ -1,0 +1,167 @@
+
+# importando a base de dados
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import os
+import tarfile
+from six.moves import urllib
+import csv
+
+FILE_TO_DOWNLOAD =  "objetosECores.csv"
+DOWNLOAD_ROOT = "https://raw.githubusercontent.com/rodolfostark/ColorSensorMachineLearning/"
+DATA_PATH = "master/"
+DATA_URL = DOWNLOAD_ROOT + DATA_PATH + FILE_TO_DOWNLOAD
+
+def fetch_data(data_url=DATA_URL, data_path=DATA_PATH, file_to_download=FILE_TO_DOWNLOAD):
+  if not os.path.isdir(data_path):
+    os.makedirs(data_path)
+  urllib.request.urlretrieve(data_url, data_path+file_to_download)
+  
+fetch_data()
+
+# observando se o diretório datasets foi criado com sucesso 
+# !ls dados
+
+
+!ls master/
+
+FILE_TO_DOWNLOAD =  "matriz_y.csv"
+DOWNLOAD_ROOT = "https://raw.githubusercontent.com/rodolfostark/ColorSensorMachineLearning/"
+DATA_PATH = "master/"
+DATA_URL = DOWNLOAD_ROOT + DATA_PATH + FILE_TO_DOWNLOAD
+
+def fetch_data(data_url=DATA_URL, data_path=DATA_PATH, file_to_download=FILE_TO_DOWNLOAD):
+  if not os.path.isdir(data_path):
+    os.makedirs(data_path)
+  urllib.request.urlretrieve(data_url, data_path+file_to_download)
+  
+fetch_data()
+
+# observando se o diretório datasets foi criado com sucesso 
+# !ls dados
+
+
+!ls master/
+
+#processo de leitura do arquivo de DADOS
+
+leitura = csv.reader(open('master/objetosECores.csv','r'))
+leitura = list(leitura) # tem que converter pra lista primeiro
+leitura = np.array(leitura)# e depois converte pra array
+
+# sequencias de testes pra checar se o array foi gerado de forma correta
+#print (leitura)
+print("\n")
+#print(leitura[0])
+print("\n")
+#print(leitura[0][0])
+
+objetos_coloridos = leitura [1:,0:3] # objeto vermelho é o array apenas numérico
+y = leitura [1:,3]
+print(objetos_coloridos)
+#for i in range (1, len(y)):
+ #   y[i]=int(y[i])*100
+ 
+ 
+#processo de leitura do arquivo de DADOS
+
+leitura_Y = csv.reader(open('master/matriz_y.csv','r'))
+leitura_Y = list(leitura_Y) # tem que converter pra lista primeiro
+leitura_Y = np.array(leitura_Y)# e depois converte pra array
+
+# sequencias de testes pra checar se o array foi gerado de forma correta
+#print (leitura)
+print("\n")
+#print(leitura[0])
+print("\n")
+#print(leitura[0][0])
+
+#print(leitura_Y)
+
+
+# Divisão de dados em matriz de features e array de classes 
+Y = leitura_Y
+X = objetos_coloridos[:,:] # features' matrices
+print(y)
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y,test_size = 0.2, random_state = 0)
+
+# Part 2 - Now let's make the ANN!
+
+# Importing the Keras libraries and packages
+import keras
+from keras.models import Sequential
+from keras.layers import Dense, Activation
+
+# Initialising the ANN
+classifier = Sequential()
+
+# We gona use two hidden layers, 4 neurons each
+
+# Adding the input layer and the first hidden layer
+classifier.add(Dense( activation = 'tanh', input_dim = 3, units = 4, kernel_initializer = 'uniform'))
+
+# Adding the second hidden layer
+classifier.add(Dense( activation = 'tanh', units = 15, kernel_initializer = 'uniform' ))
+
+# Adding the output layer
+classifier.add(Dense( activation = 'tanh', units = 1 , kernel_initializer = 'uniform'))
+
+
+# Compiling the ANN
+classifier.compile(optimizer = 'rmsprop', loss = 'binary_crossentropy', metrics = ['accuracy'])
+
+
+# one epoch = one forward pass and one backward pass of 
+#    all the training examples
+# batch size = the number of training examples in one forward/backward pass. 
+#    The higher the batch size, the more memory space you'll need.
+# number of iterations = number of passes, each pass using [batch size] 
+#    number of examples. To be clear, one pass = one forward pass + one
+#    backward pass (we do not count the forward pass and backward pass 
+#    as two different passes).
+
+# For further reading, access <https://stats.stackexchange.com/questions/153531/what-is-batch-size-in-neural-network>
+
+# Fitting the ANN to the Training set
+
+qtd_dados_treino = len(X_train)
+print(qtd_dados_treino)
+
+classifier.fit(X_train, y_train, batch_size = qtd_dados_treino, epochs = 5, validation_data = None, validation_steps = None)
+
+# Part 3 - Making the predictions and evaluating the model
+
+# Predicting the Test set results
+y_pred = classifier.predict(X_test)
+print(X_test)
+print('\n')
+print(y_test)
+print('\n')
+
+from sklearn.metrics import confusion_matrix
+
+for i in range(0, len(y_pred)):
+  y_pred[i] = float(y_pred[i]*100.00)
+
+print(y_pred)
+
+for i in range(0, len(y_pred)):  
+  if y_pred[i] >= 1.654:
+    y_pred[i] = 1
+  elif y_pred[i] < 0:
+    y_pred[i] = -1
+  else: 
+    y_pred[i] = 0
+    
+y_test = [1,0,1,0,-1,-1,0,1,1,0,-1]
+cm = confusion_matrix(y_test, y_pred)
+print('\n')
+print(cm)
+
+erroRelativo = np.mean(y_pred != y_test)
+print('\n')
+print(1 - erroRelativo)
