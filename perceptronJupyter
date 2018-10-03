@@ -1,0 +1,49 @@
+# treino de perceptron correto, por Mateus de Assis
+
+import numpy as np #necessário para se manipular vetores, arrays e matrizes
+
+x = [[0,0,1],[1,1,0]]; #matriz de padrões
+d = [-1, +1] #matriz de classes
+w = [0.4, -0.6, 0.6] # valores iniciais da lista de pesos
+b = 0.5 # esse é o viés (bias)
+l_r = 0.4 # learning rate, ou taxa de aprendizado
+t = [[1,1,1],[0,0,0],[1,0,0],[0,1,1]] # vetor de testes
+
+flag = 1;
+epoch = 1;
+
+# fase de treino do perceptron
+
+while flag!=0 or epoch <= 5: # Tal condição está incorreta
+  # A condição correta é quando a época chegou a 5 ou
+  # se nenhum erro foi encontrado
+  print("\n na epoca", epoch, "temos: ")
+  flag = 0;
+  for i in range (0,2):
+    print("  iteracao numero", i, " com classe igual a d = ", d[i])
+    u = np.multiply(x[i],w);
+    u = np.sum(u) - b;
+    if u>=0:
+      y = 1;
+    else:
+      y = -1;
+    erro = d[i]-y;
+    print("    erro igual a ", erro);
+    w1 = np.multiply(l_r*erro,x[i]);
+    w = w + w1
+    b = b - l_r*erro
+    print("    vetor pesos corrigido: ", w)
+    print("    novo vies igual a: ", b)
+  epoch = epoch+1;
+print(w);
+
+# fase de teste (classificação)
+
+for j in range (0,4):
+  u = np.multiply(t[j],w);
+  u = np.sum(u) - b;
+  print("valor de resposta igual a: ", u)
+  if u>=0:
+    print("o padrao ", t[j], "pertecence a classe +1")
+  else:
+    print("o padrao ", t[j], "pertecence a classe -1")
