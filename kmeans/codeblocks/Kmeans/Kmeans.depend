@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1544387657 source:c:\users\mateu\documents\ufrn\4o_periodo\machinelearning\aprendendomachinelearning\kmeans\codeblocks\kmeans\main.cpp
+	<iostream>
+	"kmeans.h"
+
+1544387917 source:c:\users\mateu\documents\ufrn\4o_periodo\machinelearning\aprendendomachinelearning\kmeans\codeblocks\kmeans\kmeans.cpp
+	"kmeans.h"
+	<cmath>
+
+1544387729 c:\users\mateu\documents\ufrn\4o_periodo\machinelearning\aprendendomachinelearning\kmeans\codeblocks\kmeans\kmeans.h
+
