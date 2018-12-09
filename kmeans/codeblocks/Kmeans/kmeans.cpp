@@ -7,19 +7,19 @@ Kmeans::Kmeans(float *_clusters, int _dim, int _qtd)
     dim_clusters = _dim;
     qtd_clusters = _qtd;
 }
-float metric(float *cluster, float *feat)
+float Kmeans::metric(float *cluster, float *feat)
 {
     float metric = 0;
-    for(int i = 0;i < 2; i++){
+    for(int i = 0;i < qtd_clusters; i++){
        metric += pow(*(cluster + i) - *(feat + i), 2);
     }
     return sqrt(metric);
 }
 
-float metric_M(float *cluster, float *feat)
+float Kmeans::metric_M(float *cluster, float *feat)
 {
     float metric = 0;
-    for(int i = 0; i<2; i++){
+    for(int i = 0; i< qtd_clusters; i++){
         metric += std::abs(*(cluster + i) - *(feat + i));
     }
     return metric;
