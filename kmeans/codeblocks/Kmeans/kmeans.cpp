@@ -1,5 +1,5 @@
 #include "kmeans.h"
-#include <cmath>
+#include <math.h>
 
 Kmeans::Kmeans(float *_clusters, int _dim, int _qtd)
 {
@@ -20,7 +20,7 @@ float Kmeans::metric_M(float *cluster, float *feat)
 {
     float metric = 0;
     for(int i = 0; i< qtd_clusters; i++){
-        metric += std::abs(*(cluster + i) - *(feat + i));
+        metric += fabs(*(cluster + i) - *(feat + i));
     }
     return metric;
 }
