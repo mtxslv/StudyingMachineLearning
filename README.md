@@ -13,4 +13,4 @@ In this repo there are a lot of codes on the concept of *Machine Learning/ Deep 
 
 * */medleydata/*: data that I have no idea where it came from (º.º ~)
 
-* */kmeans/*:
+* */kmeans/*: a cpp class for a *kmeans algorithm*. It was designed as the last project for the [class](https://github.com/ect-info/ml). I has a lot of work to be done, as the algorithm is not complete.
