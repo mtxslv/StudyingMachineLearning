@@ -7,7 +7,7 @@ In this repo there are a lot of codes on the concept of *Machine Learning/ Deep 
 
 * */classmedley/*: during my studies, I've collected some examples in order to experiment some ideas, or even play around. Here they can be found. My huge thanks for the developers :) .
 
-* */examples/*: more examples, just like the */classmedley/*. In this folder there are some skethces I've designed to the [lectures](https://github.com/ect-info/ml) of [Orivaldo Santana](https://github.com/orivaldosantana) Huge thanks to him and my coleagues!
+* */examples/*: more examples, just like the */classmedley/*. In this folder there are some skethces I've designed to the [lectures](https://github.com/ect-info/ml) of [Orivaldo Santana](https://github.com/orivaldosantana). Huge thanks to him and my coleagues!
 
 * */perceptron/*: I tried to develop a C class of a perceptron. It's still incomplete :( .
 
