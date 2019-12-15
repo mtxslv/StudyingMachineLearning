@@ -14,3 +14,5 @@ In this repo there are a lot of codes on the concept of *Machine Learning/ Deep 
 * */medleydata/*: data that I have no idea where it came from (º.º ~)
 
 * */kmeans/*: a cpp class for a *kmeans algorithm*. It was designed as the last project for the [class](https://github.com/ect-info/ml). I has a lot of work to be done, as the algorithm is not complete.
+
+* */MIT6.S191/*: exercises for the [MIT Intro To Deep Learning](http://introtodeeplearning.com/) course. The labs can be found [here](https://github.com/aamini/introtodeeplearning_labs). Huge thanks for team involved with the classes!
