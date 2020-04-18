@@ -13,6 +13,8 @@ In this repo there are a lot of codes on the concept of *Machine Learning/ Deep 
 
 * */MIT6.S191/*: exercises for the [MIT Intro To Deep Learning](http://introtodeeplearning.com/) course. The labs can be found [here](https://github.com/aamini/introtodeeplearning_labs). Huge thanks to the team involved with the classes!
 
+* */PaulGAllenSchool/*: Machine Learning classes hosted by professor Pedro Domingos. You can find the it [on Youtube](https://www.youtube.com/user/UWCSE/playlists?view=50&sort=dd&shelf_id=16) and the material can be found [here](https://courses.cs.washington.edu/courses/csep546/17au/).
+
 * */perceptron/*: I tried to develop a C class of a perceptron. It's still incomplete :( .
 
 * */tensorflow_classes/*: in this folder there are the examples from the serie "[ML Zero to Hero](https://youtu.be/KNAWp2S3w94)", hosted by [Laurence Moroney](https://github.com/lmoroney?tab=repositories). It is a serie of 4 videos launched in the tensorflow youtube channel, and it aims to explain some concepts of Deep Neural Networks. 
