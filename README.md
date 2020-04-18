@@ -13,7 +13,7 @@ In this repo there are a lot of codes on the concept of *Machine Learning/ Deep 
 
 * */MIT6.S191/*: exercises for the [MIT Intro To Deep Learning](http://introtodeeplearning.com/) course. The labs can be found [here](https://github.com/aamini/introtodeeplearning_labs). Huge thanks to the team involved with the classes!
 
-* */PaulGAllenSchool/*: Machine Learning classes hosted by professor Pedro Domingos. You can find the it [on Youtube](https://www.youtube.com/user/UWCSE/playlists?view=50&sort=dd&shelf_id=16) and the material can be found [here](https://courses.cs.washington.edu/courses/csep546/17au/).
+* */PaulGAllenSchool/*: Machine Learning classes hosted by professor Pedro Domingos. You can find it [on Youtube](https://www.youtube.com/user/UWCSE/playlists?view=50&sort=dd&shelf_id=16) and the material can be found [here](https://courses.cs.washington.edu/courses/csep546/17au/).
 
 * */perceptron/*: I tried to develop a C class of a perceptron. It's still incomplete :( .
 
