@@ -16,3 +16,5 @@ Since there are two classes websites (one for [spring 2015](https://courses.cs.w
     * Projects
     
         For Decision Trees' "homework" I chose the [Letter Recognition project](https://courses.cs.washington.edu/courses/cse446/15sp/assignments/1/hw1.pdf), from [spring 2015 classes](https://courses.cs.washington.edu/courses/cse446/15sp/). I prefer this one because image recognition is something I'm very interested in.
+
+        I'll use the dataset contained in ```/hw1-data/```, which is separated in ```features.txt``` and ```labels.txt```. 
