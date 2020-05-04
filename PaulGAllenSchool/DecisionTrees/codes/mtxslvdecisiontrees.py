@@ -9,12 +9,24 @@ Original file is located at
 
 # Commented out IPython magic to ensure Python compatibility.
 #this is for the purpose of getting MtxslvNode file
-
+# %cd /content/
+# %rm -r StudyingMachineLearning/
 !git clone https://github.com/mtxslv/StudyingMachineLearning.git
 # % cd StudyingMachineLearning/PaulGAllenSchool/DecisionTrees/codes
 
+url_dataset = "https://raw.githubusercontent.com/mtxslv/StudyingMachineLearning/master/PaulGAllenSchool/DecisionTrees/hw1-data/features.txt"
+url_labels = "https://raw.githubusercontent.com/mtxslv/StudyingMachineLearning/master/PaulGAllenSchool/DecisionTrees/hw1-data/labels.txt"
+
+import pandas as pd
+
+df_features = pd.read_csv(url_dataset,names=["x-box","y-box", "width","high","onpix","x-bar","y-bar", "x2bar","y2bar","xybar", "x2ybr","xy2br","x-ege","xegvy","y-ege","yegvx"], sep= ' ')
+df_labels = pd.read_csv(url_labels,names=["labels"])
+
+lbls = df_labels.to_numpy()
+ftrs = df_features.to_numpy()
+
 import numpy as np
-import mtxslvnode # class is imported by file name (without .py extention)
+from mtxslvnode import * # class is imported by file name (without .py extention)
 
 class MtxslvDecisionTrees:
   # while using the class, be sure MtxslvNode file is in the folder
@@ -29,33 +41,117 @@ class MtxslvDecisionTrees:
     self.root = None
     self.node_quantity = 0
     self.how_many_classes = 0
-    
-  def fit(self, features, labels, threshold): #method for creating the tree itself
-    features_np = np.array(features)
-    labels_np = np.array(labels)
-    
-    self.how_many_classes = len(set(labels_np[:,0]))
 
-    if(self.how_many_classes == 1):
+  def fit(self, features, labels, threshold): #method for creating the tree itself
+    self._attributes_to_test = [True for x in range(np.shape(features)[1])] # if true, test that attribute during algorithm
+                                                                           # if false, do not test that attribute
+    self.how_many_classes = len(set(labels[:,0])) # how many classes should I predict?
+    
+    #print(self.attributes_to_test) for testing, remove later
+    #print(self.how_many_classes) for testing, remove later
+
+    self.number = 1
+    self._mtxslv_id3(features,labels,threshold)
+
+  def _mtxslv_id3(self, features, labels, threshold):
+    if((self.how_many_classes==1)): 
+    # if there is only one class, node is a leaf with most probable class
       self.root = MtxslvNode() # object is instantiated by class name
-      self.root.turn_node_to_leaf(-1,-1,labels_np[0,0])
+      self.root.turn_node_to_leaf(-1,-1,most_common_class(labels))
+    elif(not(self._attributes_to_test.count(True))):
+    #if all attributes were already tested
+      #botar coisas aqui
+      print("eita dentro do if")
     else:
-      print("blahblahblah")
+      # this is the point in mitchell's id3 algorithm with "otherwise begin"  
+      print("hello world do else")  
+    print('hello world de fora')
 
   
 #  def evaluate(): method for using the tree
 
-url_dataset = "https://raw.githubusercontent.com/mtxslv/StudyingMachineLearning/master/PaulGAllenSchool/DecisionTrees/hw1-data/features.txt"
-url_labels = "https://raw.githubusercontent.com/mtxslv/StudyingMachineLearning/master/PaulGAllenSchool/DecisionTrees/hw1-data/labels.txt"
+lista_teste = [True for x in range(np.shape(ftrs)[1])]
 
-import pandas as pd
+cacildis = lista_teste.copy()
+cacildis
 
-df_features = pd.read_csv(url_dataset,names=["x-box","y-box", "width","high","onpix","x-bar","y-bar", "x2bar","y2bar","xybar", "x2ybr","xy2br","x-ege","xegvy","y-ege","yegvx"], sep= ' ')
-df_labels = pd.read_csv(url_labels,names=["labels"])
+if(not(0)):
+  print('katon')
 
-lbls = df_labels.to_numpy()
-ftrs = df_features.to_numpy()
+len(set(lbls[:,0]))
 
 arvore = MtxslvDecisionTrees()
 
 arvore.fit(ftrs, lbls,0.05)
+
+def most_common_class(labels):
+  """
+    Given the set <features,labels>, return the most probable class (label).
+    This is done using the statistic of each class, and returning the class 
+    with high statistic.
+  """
+  existent_classes = list(set(labels[:,0]))
+  probability = []
+  # calculate the statistics of each class (probability of each one)
+  for i in existent_classes:
+    probability.append(labels.tolist().count(i)/np.shape(labels[:,0])[0])
+  #turn probability list to numpy array so we can use np.argmax
+  np_prob = np.array(probability)
+  where_is_max_prob = np.argmax(np_prob)  
+  return existent_classes[where_is_max_prob]
+
+from scipy.stats import entropy
+def mtxslv_entropy(features, labels):
+  """
+  Given <features,labels>, return the entropy of labels.
+  I still don't know if we should keep features as a parameter
+  """
+  existent_classes = list(set(labels[:,0]))
+  probability = []
+  # calculate the statistics of each class (probability of each one)
+  for i in existent_classes:
+    probability.append(labels.tolist().count(i)/np.shape(labels[:,0])[0])
+  
+  return entropy(probability)
+
+import numpy as np
+
+def best_classifier_attribute(features, labels, copy_of_attr_2_test):
+  """
+    Given the set <features,labels>, return the best classifier attribute.
+    This is done using the entropy.
+
+    I'll loosily base myself in hw1.pdf formulas in order to write down this code
+  """
+  existent_classes = list(set(labels[:,0]))
+  probability = []
+  # calculate the statistics of each class (probability of each one)
+  for i in existent_classes:
+    probability.append(labels.tolist().count(i)/np.shape(labels[:,0])[0])
+  
+  # the dataset entropy: Ĥ(D)
+  dataset_entropy = entropy(probability,base=2)
+
+  entropy_dataset_given_attributes = []
+
+  for i in range(np.shape(features)[1]):
+    # for each attribute
+    print(i)
+
+listinha = np.array([[1],[2],[2],[3],[3],[3],[4],[4],[4],[4]])
+e_c = list(set(listinha[:,0]))
+p = []
+for j in e_c:
+  p.append(listinha.tolist().count(j)/np.shape(listinha[:,0])[0])
+p
+
+mtxslv_entropy(listinha,listinha)
+
+-np.log2(0.1)*0.1-0.2*np.log2(0.2)-0.3*np.log2(0.3)-0.4*np.log2(0.4)
+
+for i in range(np.shape(ftrs)[1]):
+  print("jah")
+
+0*np.log2(0)
+
+entropy([0.1, 0.2, 0.3, 0.4],base=2)
