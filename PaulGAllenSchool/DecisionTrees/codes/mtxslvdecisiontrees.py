@@ -90,5 +90,3 @@ len(set(lbls[:,0]))
 arvore = MtxslvDecisionTrees()
 
 arvore.fit(features_teste, labels_teste,0.05)
-
-import importlib; importlib.reload(mtxslv_math_4_dt)
