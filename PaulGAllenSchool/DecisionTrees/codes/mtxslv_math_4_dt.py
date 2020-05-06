@@ -115,4 +115,4 @@ def get_subset(features,labels,attribute,attribute_value):
       if(features[it,attribute] == attribute_value):
         subset_features.append(features[it,:].tolist())
         subset_labels.append(labels[it,:].tolist())
-    return np.array(subset_features),np.array(subset_labels)
+  return np.array(subset_features),np.array(subset_labels)
