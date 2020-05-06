@@ -27,6 +27,7 @@ ftrs = df_features.to_numpy()
 
 import numpy as np
 from mtxslvnode import * # class is imported by file name (without .py extention)
+from mtxslv_math_4_dt import *
 
 class MtxslvDecisionTrees:
   # while using the class, be sure MtxslvNode file is in the folder
@@ -35,6 +36,7 @@ class MtxslvDecisionTrees:
     root: node at the root
     node_quantity: how many nodes there exists
     how_many_classes: how many classes there exists
+    attributes_to_test: what attributes can be tested. If True, test it. If False, do not test it.
   """
 
   def __init__(self):
@@ -50,108 +52,43 @@ class MtxslvDecisionTrees:
     #print(self.attributes_to_test) for testing, remove later
     #print(self.how_many_classes) for testing, remove later
 
-    self.number = 1
-    self._mtxslv_id3(features,labels,threshold)
+    self.number = 1 # remove later
+    self.root = self._mtxslv_id3(features,labels,threshold)
+    #print(self._attributes_to_test.copy())
 
   def _mtxslv_id3(self, features, labels, threshold):
-    if((self.how_many_classes==1)): 
-    # if there is only one class, node is a leaf with most probable class
-      self.root = MtxslvNode() # object is instantiated by class name
-      self.root.turn_node_to_leaf(-1,-1,most_common_class(labels))
-    elif(not(self._attributes_to_test.count(True))):
-    #if all attributes were already tested
-      #botar coisas aqui
-      print("eita dentro do if")
+    current_node = MtxslvNode() # object is instantiated by class name
+
+    if((self.how_many_classes==1)or(not(self._attributes_to_test.count(True)))):
+      # if there is only one class, node is a leaf with most probable class; or
+      # if all attributes were already tested
+      current_node.turn_node_to_leaf(-1,-1,most_common_class(labels))
+      return current_node
     else:
-      # this is the point in mitchell's id3 algorithm with "otherwise begin"  
-      print("hello world do else")  
-    print('hello world de fora')
+      # this is the point in mitchell's id3 algorithm with "otherwise begin" 
+      best_classifying_attribute = best_classifier_attribute(features,labels,self._attributes_to_test.copy()) #column of best attribute (0 based)
+      possible_attribute_values = set(features[:,best_classifying_attribute]) # set of possible values the best classifying attribute can assume
+      for p_a_v in possible_attribute_values:
+        features_vi, labels_vi = mtxslv_get_subset(features,labels,best_classifying_attribute,p_a_v)
+        current_node.add_branch(best_classifier_attribute,p_a_v, self._mtxslv_id3(features_vi,labels_vi, threshold) ) # i need to put a node in here
+    
+    return current_node
 
   
 #  def evaluate(): method for using the tree
 
 lista_teste = [True for x in range(np.shape(ftrs)[1])]
 
-cacildis = lista_teste.copy()
-cacildis
-
-if(not(0)):
-  print('katon')
+lista_features = [[0],[1],[0],[1]]
+features_teste = np.concatenate((lista_features,lista_features), axis = 1)
+labels_teste = np.array([[1],[1],[0],[1]])
+print("features_teste = \n",features_teste)
+print("labels_teste = \n",labels_teste)
 
 len(set(lbls[:,0]))
 
 arvore = MtxslvDecisionTrees()
 
-arvore.fit(ftrs, lbls,0.05)
+arvore.fit(features_teste, labels_teste,0.05)
 
-def most_common_class(labels):
-  """
-    Given the set <features,labels>, return the most probable class (label).
-    This is done using the statistic of each class, and returning the class 
-    with high statistic.
-  """
-  existent_classes = list(set(labels[:,0]))
-  probability = []
-  # calculate the statistics of each class (probability of each one)
-  for i in existent_classes:
-    probability.append(labels.tolist().count(i)/np.shape(labels[:,0])[0])
-  #turn probability list to numpy array so we can use np.argmax
-  np_prob = np.array(probability)
-  where_is_max_prob = np.argmax(np_prob)  
-  return existent_classes[where_is_max_prob]
-
-from scipy.stats import entropy
-def mtxslv_entropy(features, labels):
-  """
-  Given <features,labels>, return the entropy of labels.
-  I still don't know if we should keep features as a parameter
-  """
-  existent_classes = list(set(labels[:,0]))
-  probability = []
-  # calculate the statistics of each class (probability of each one)
-  for i in existent_classes:
-    probability.append(labels.tolist().count(i)/np.shape(labels[:,0])[0])
-  
-  return entropy(probability)
-
-import numpy as np
-
-def best_classifier_attribute(features, labels, copy_of_attr_2_test):
-  """
-    Given the set <features,labels>, return the best classifier attribute.
-    This is done using the entropy.
-
-    I'll loosily base myself in hw1.pdf formulas in order to write down this code
-  """
-  existent_classes = list(set(labels[:,0]))
-  probability = []
-  # calculate the statistics of each class (probability of each one)
-  for i in existent_classes:
-    probability.append(labels.tolist().count(i)/np.shape(labels[:,0])[0])
-  
-  # the dataset entropy: Ĥ(D)
-  dataset_entropy = entropy(probability,base=2)
-
-  entropy_dataset_given_attributes = []
-
-  for i in range(np.shape(features)[1]):
-    # for each attribute
-    print(i)
-
-listinha = np.array([[1],[2],[2],[3],[3],[3],[4],[4],[4],[4]])
-e_c = list(set(listinha[:,0]))
-p = []
-for j in e_c:
-  p.append(listinha.tolist().count(j)/np.shape(listinha[:,0])[0])
-p
-
-mtxslv_entropy(listinha,listinha)
-
--np.log2(0.1)*0.1-0.2*np.log2(0.2)-0.3*np.log2(0.3)-0.4*np.log2(0.4)
-
-for i in range(np.shape(ftrs)[1]):
-  print("jah")
-
-0*np.log2(0)
-
-entropy([0.1, 0.2, 0.3, 0.4],base=2)
+import importlib; importlib.reload(mtxslv_math_4_dt)
