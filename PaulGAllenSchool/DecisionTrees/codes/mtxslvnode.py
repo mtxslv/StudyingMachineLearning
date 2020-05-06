@@ -10,10 +10,10 @@ Original file is located at
 class MtxslvNode:
   """
   Attributes:
-    attribute_to_test: if a leaf, what attribute should this node test? Remember, the 
-                       sample is ordered. One attribute happens after another.
+    attribute_to_test: Remember, the sample is ordered (list-like, 0 based). One
+                       attribute happens after another.
                        So, if we want to test the first attribute, the variable
-                       attribute_to_test should equal 0.
+                       attribute_to_test should equal 0. 
     attribute_value: the attribute tested by the node should equal one of atribute_value,
                      so we keep iterating in the tree. List-like attribute                  
     child_pointers: the pointers for the children will depend on the dataset
@@ -40,17 +40,18 @@ class MtxslvNode:
      self.is_leaf = False
      self.label = None
   
-  def add_branch(self, attr_value, child_no):
+  def add_branch(self, attr_2_test, attr_value, child_no):
     if(attr_value == None):
       raise Exception('Attribute value cannot be None')
     elif(child_no == None):
       raise Exception('Child node cannot be None')
     else:  
+      self.attribute_to_test = attr_2_test      
       self.attribute_value.append(attr_value)
       self.child_node.append(child_no)
       self.is_leaf = False
       self.label = None
-      self.attribute_to_test = None
+
 
   def turn_node_to_leaf(self, attr_2_test, attr_value, class_label):
     if(class_label == None):
