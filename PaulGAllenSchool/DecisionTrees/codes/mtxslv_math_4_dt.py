@@ -100,7 +100,7 @@ def most_common_class(labels):
   where_is_max_prob = np.argmax(np_prob)  
   return existent_classes[where_is_max_prob]
 
-def get_subset(features,labels,attribute,attribute_value):
+def mtxslv_get_subset(features,labels,attribute,attribute_value):
   """
     Given <features,labels>, attribute (the column of features, 0 based)
     and the value for this attribute (attribute_value), return the subset 
