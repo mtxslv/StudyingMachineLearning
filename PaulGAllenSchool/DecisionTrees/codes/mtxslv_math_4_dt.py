@@ -99,3 +99,20 @@ def most_common_class(labels):
   np_prob = np.array(probability)
   where_is_max_prob = np.argmax(np_prob)  
   return existent_classes[where_is_max_prob]
+
+def get_subset(features,labels,attribute,attribute_value):
+  """
+    Given <features,labels>, attribute (the column of features, 0 based)
+    and the value for this attribute (attribute_value), return the subset 
+    where the attribute has attribute_value 
+  """
+  subset_features = []
+  subset_labels = []
+  if(not(attribute_value in set(features[:,attribute]))):
+    raise Exception("Attribute Value does not exist in Assigned Attribute")
+  else:
+    for it in range(np.shape(features)[0]):
+      if(features[it,attribute] == attribute_value):
+        subset_features.append(features[it,:].tolist())
+        subset_labels.append(labels[it,:].tolist())
+    return np.array(subset_features),np.array(subset_labels)
