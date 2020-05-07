@@ -45,9 +45,14 @@ class MtxslvDecisionTrees:
     self.how_many_classes = 0
 
   def fit(self, features, labels, threshold): #method for creating the tree itself
+    """
+      features and labels must be numpy objects.
+      features must have attributes in columns and instances in lines.
+      labels must be column-like. 
+    """
+
     self._attributes_to_test = [True for x in range(np.shape(features)[1])] # if true, test that attribute during algorithm
                                                                            # if false, do not test that attribute
-    self.how_many_classes = len(set(labels[:,0])) # how many classes should I predict?
     
     #print(self.attributes_to_test) for testing, remove later
     #print(self.how_many_classes) for testing, remove later
@@ -58,6 +63,7 @@ class MtxslvDecisionTrees:
 
   def _mtxslv_id3(self, features, labels, threshold):
     current_node = MtxslvNode() # object is instantiated by class name
+    self.how_many_classes = len(set(labels[:,0])) # how many classes should I predict?
 
     if((self.how_many_classes==1)or(not(self._attributes_to_test.count(True)))):
       # if there is only one class, node is a leaf with most probable class; or
@@ -71,27 +77,11 @@ class MtxslvDecisionTrees:
       self._attributes_to_test[best_classifying_attribute] = False
       for p_a_v in possible_attribute_values:
         features_vi, labels_vi = mtxslv_get_subset(features,labels,best_classifying_attribute,p_a_v)
+        print("features_vi = \n", features_vi) # remove later
+        print("labels_vi = \n", labels_vi) # remove later
         current_node.add_branch(best_classifier_attribute,p_a_v, self._mtxslv_id3(features_vi,labels_vi, threshold) ) # i need to put a node in here
     
     return current_node
 
   
 #  def evaluate(): method for using the tree
-
-lista_teste = [True for x in range(np.shape(ftrs)[1])]
-
-lista_features = [[0],[1],[0],[1]]
-features_teste = np.concatenate((lista_features,lista_features), axis = 1)
-labels_teste = np.array([[1],[1],[0],[1]])
-print("features_teste = \n",features_teste)
-print("labels_teste = \n",labels_teste)
-
-len(set(lbls[:,0]))
-
-arvore = MtxslvDecisionTrees()
-
-arvore.fit(features_teste, labels_teste,0.05)
-
-arvore.root.child_node[0].child_node[0].is_leaf
-
-arvore.root.child_node[1].is_leaf
