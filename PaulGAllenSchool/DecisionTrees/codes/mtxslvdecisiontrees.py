@@ -68,6 +68,7 @@ class MtxslvDecisionTrees:
       # this is the point in mitchell's id3 algorithm with "otherwise begin" 
       best_classifying_attribute = best_classifier_attribute(features,labels,self._attributes_to_test.copy()) #column of best attribute (0 based)
       possible_attribute_values = set(features[:,best_classifying_attribute]) # set of possible values the best classifying attribute can assume
+      self._attributes_to_test[best_classifying_attribute] = False
       for p_a_v in possible_attribute_values:
         features_vi, labels_vi = mtxslv_get_subset(features,labels,best_classifying_attribute,p_a_v)
         current_node.add_branch(best_classifier_attribute,p_a_v, self._mtxslv_id3(features_vi,labels_vi, threshold) ) # i need to put a node in here
@@ -90,3 +91,7 @@ len(set(lbls[:,0]))
 arvore = MtxslvDecisionTrees()
 
 arvore.fit(features_teste, labels_teste,0.05)
+
+arvore.root.child_node[0].child_node[0].is_leaf
+
+arvore.root.child_node[1].is_leaf
