@@ -35,7 +35,8 @@ class MtxslvDecisionTrees:
   Attributes:
     root: node at the root
     node_quantity: how many nodes there exists
-    how_many_classes: how many classes there exists
+    how_many_classes: how many classes there exists at some point of algorithm
+    number_of_classes: how many predictable classes exists at all
     attributes_to_test: what attributes can be tested. If True, test it. If False, do not test it.
   """
 
@@ -53,23 +54,32 @@ class MtxslvDecisionTrees:
 
     self._attributes_to_test = [True for x in range(np.shape(features)[1])] # if true, test that attribute during algorithm
                                                                            # if false, do not test that attribute
-    
-    #print(self.attributes_to_test) for testing, remove later
-    #print(self.how_many_classes) for testing, remove later
 
-    self.number = 1 # remove later
+    self.number_of_classes = len(set(labels[:,0])) 
     self.root = self._mtxslv_id3(features,labels,threshold)
     #print(self._attributes_to_test.copy())
 
   def _mtxslv_id3(self, features, labels, threshold):
     current_node = MtxslvNode() # object is instantiated by class name
     self.how_many_classes = len(set(labels[:,0])) # how many classes should I predict?
+    #print("attributes to test: ",self._attributes_to_test)
+    #print("how many classes: ",self.how_many_classes)
 
-    if((self.how_many_classes==1)or(not(self._attributes_to_test.count(True)))):
+    if((self.how_many_classes==1)):
       # if there is only one class, node is a leaf with most probable class; or
-      # if all attributes were already tested
+      #print("there is only one class")
+      #print("most common class = ",most_common_class(labels))
       current_node.turn_node_to_leaf(-1,-1,most_common_class(labels))
       return current_node
+    
+    if(not(self._attributes_to_test.count(True))):  
+      # if all attributes were already tested
+      #print("all atributes were tested already")
+      current_node.turn_node_to_leaf(-1,-1,most_common_class(labels))
+      return current_node
+
+    # watch out! There is no condition for empty feature set
+    
     else:
       # this is the point in mitchell's id3 algorithm with "otherwise begin" 
       best_classifying_attribute = best_classifier_attribute(features,labels,self._attributes_to_test.copy()) #column of best attribute (0 based)
@@ -77,11 +87,20 @@ class MtxslvDecisionTrees:
       self._attributes_to_test[best_classifying_attribute] = False
       for p_a_v in possible_attribute_values:
         features_vi, labels_vi = mtxslv_get_subset(features,labels,best_classifying_attribute,p_a_v)
-        print("features_vi = \n", features_vi) # remove later
-        print("labels_vi = \n", labels_vi) # remove later
-        current_node.add_branch(best_classifier_attribute,p_a_v, self._mtxslv_id3(features_vi,labels_vi, threshold) ) # i need to put a node in here
+        #print("features_vi = \n", features_vi) # remove later
+        #print("labels_vi = \n", labels_vi) # remove later
+        current_node.add_branch(best_classifying_attribute,p_a_v, self._mtxslv_id3(features_vi,labels_vi, threshold) ) # i need to put a node in here
     
     return current_node
 
-  
-#  def evaluate(): method for using the tree
+
+  def evaluate(self, instance, root = None):
+    if (root == None):
+      root = self.root
+    if(root.is_leaf):
+      return root.label
+    else:
+      attr_2_test = root.attribute_to_test
+      instance_value = instance[attr_2_test]
+      new_root = root.child_node[root.attribute_value.index(instance_value)]
+      return self.evaluate(instance,new_root)
