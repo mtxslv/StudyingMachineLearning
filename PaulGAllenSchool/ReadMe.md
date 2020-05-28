@@ -15,6 +15,15 @@ Since there are two classes websites (one for [spring 2015](https://courses.cs.w
 
     * Projects
     
-        For Decision Trees' "homework" I chose the [Letter Recognition project](https://courses.cs.washington.edu/courses/cse446/15sp/assignments/1/hw1.pdf), from [spring 2015 classes](https://courses.cs.washington.edu/courses/cse446/15sp/). I prefer this one because image recognition is something I'm very interested in.
+        For Decision Trees' project I chose the [Letter Recognition project](https://courses.cs.washington.edu/courses/cse446/15sp/assignments/1/hw1.pdf), from [spring 2015 classes](https://courses.cs.washington.edu/courses/cse446/15sp/). I prefer this one because image recognition is something I'm very interested in.
 
         I'll use the dataset contained in ```/hw1-data/```, which is separated in ```features.txt``` and ```labels.txt```. 
+
+4. _k Nearest Neighbors_
+    * Extra Materials
+
+        I did not need to access any extra material. [Mitchell](https://books.google.com.br/books/about/Machine_Learning.html?id=EoYBngEACAAJ&redir_esc=y) has a good explanation of the concepts.
+
+    * Projects
+
+        The Collaborative Filtering project can be [found here](https://courses.cs.washington.edu/courses/csep546/17au/psetwww/2/).              
