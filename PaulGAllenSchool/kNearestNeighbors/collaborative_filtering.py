@@ -10,14 +10,18 @@ Original file is located at
 
 The steps to estimate the rating are:
 1. Define _active user_ (subscript a) and his/her _movie_ (subscript j) to be rated.
-2. Get all users' ID from the training set 
-3. For each user, do:
+2. Initiate _estimation_ as the mean of _active user_ votes
+3. Get all users' ID from the training set 
+4. For each user, do:
     - Get his/her votes (set of logs)
     - If he/she voted in the _movie_ defined above, do:
-        - Get Movies both users (active one and training one) voted in and calculate ```w(a,i)``` and the difference between the user vote on the iterating movie and his/her average.
-4. Compute normalizing factor _k_.
-5. Estimate active user rate on _movie_.
-6. Return estimation
+        - Get Movies both users (active one and training one) voted in and, if this set is not empty:
+          - calculate ```w(a,i)``` and the difference between the user vote on the iterating movie and his/her average.
+5. If there is correlations:
+    - Compute normalizing factor _k_.
+6. If there are correlations and differences:
+    - Add weighting factor to the estimate of active user rate on _movie_.
+7. Return estimation
 """
 
 import numpy as np
@@ -47,8 +51,7 @@ def mtxslv_user_ratings(user_id, dataset):
 # of two lists in most simple way 
 # from https://www.geeksforgeeks.org/python-intersection-two-lists/
 def intersection(lst1, lst2): 
-	lst3 = [value for value in lst1 if value in lst2] 
-	return lst3
+    return list(set(lst1) & set(lst2))
 
 def mtxslv_collab_filter(instance, product_id,training_set):
   """
@@ -62,6 +65,7 @@ def mtxslv_collab_filter(instance, product_id,training_set):
   """
   training_set_list = training_set.tolist()
   average_rating_active_user = np.mean(instance[:,ratings_column]) # \overine{v_a}
+  estimation =  average_rating_active_user
 
   w = [] # list of all weights/correlation measures
   k = 0  # normalizing term
@@ -82,34 +86,44 @@ def mtxslv_collab_filter(instance, product_id,training_set):
       movies_both_users_voted = intersection(user_subset[:,movie_column].tolist(),
                                              instance[:,movie_column].tolist()) # and calculate the movies this user and the active user rated
       #print("movies both users voted:",movies_both_users_voted)
-      user_index_product_id = user_subset[:,movie_column].tolist().index(product_id) # Calculate what index for user
-                                                                                     # is related to product_id 
-      
-      w_numerator = 0                             # Numerator for w formula: \sum_{}^{}\mathop{}_{\mkern-5mu j} (v_{a,j} - \overline{v_a} )(v_{i,j} - \overline{v_i})
-      w_active_denominator_factor = 0             # Active user factor for w denominator: \sum_{}^{}\mathop{}_{\mkern-5mu j} (v_{a,j} - \overline{v_a} )^2
-      w_training_usr_denominator_factor = 0       # Training user factor for w denominator: \sum_{}^{}\mathop{}_{\mkern-5mu j} (v_{i,j} - \overline{v_i} )^2
+      #print("user = ", user)
+      if not( not movies_both_users_voted ): # if there are movies both users voted
+        #print("\t existem filmes em comum com esse usuario")
+        user_index_product_id = user_subset[:,movie_column].tolist().index(product_id) # Calculate what index for user
+                                                                                      # is related to product_id 
+                                                                                              
+        w_numerator = 0                             # Numerator for w formula: \sum_{}^{}\mathop{}_{\mkern-5mu j} (v_{a,j} - \overline{v_a} )(v_{i,j} - \overline{v_i})
+        w_active_denominator_factor = 0             # Active user factor for w denominator: \sum_{}^{}\mathop{}_{\mkern-5mu j} (v_{a,j} - \overline{v_a} )^2
+        w_training_usr_denominator_factor = 0       # Training user factor for w denominator: \sum_{}^{}\mathop{}_{\mkern-5mu j} (v_{i,j} - \overline{v_i} )^2
 
-      for movie in movies_both_users_voted: # Now, iterate over the movies both users rated 
-        
-        training_user_index_for_movie = user_subset[:,movie_column].tolist().index(movie) # index of user vote for movie
-        active_user_index_for_movie = instance[:,movie_column].tolist().index(movie)      # index of active user vote for movie
+        for movie in movies_both_users_voted: # Now, iterate over the movies both users rated 
+          
+          training_user_index_for_movie = user_subset[:,movie_column].tolist().index(movie) # index of user vote for movie
+          active_user_index_for_movie = instance[:,movie_column].tolist().index(movie)      # index of active user vote for movie
 
-        w_numerator = w_numerator + (instance[active_user_index_for_movie,ratings_column]-average_rating_active_user)*(user_subset[training_user_index_for_movie,ratings_column]-user_average)
-        w_active_denominator_factor = w_active_denominator_factor + np.power((instance[active_user_index_for_movie,ratings_column]-average_rating_active_user),2)
-        w_training_usr_denominator_factor = w_training_usr_denominator_factor + np.power( (user_subset[training_user_index_for_movie,ratings_column]-user_average) ,2)
+          w_numerator = w_numerator + (instance[active_user_index_for_movie,ratings_column]-average_rating_active_user)*(user_subset[training_user_index_for_movie,ratings_column]-user_average)
+          w_active_denominator_factor = w_active_denominator_factor + np.power((instance[active_user_index_for_movie,ratings_column]-average_rating_active_user),2)
+          w_training_usr_denominator_factor = w_training_usr_denominator_factor + np.power( (user_subset[training_user_index_for_movie,ratings_column]-user_average) ,2)
 
-      w.append(w_numerator/np.sqrt(w_active_denominator_factor*w_training_usr_denominator_factor))
-      user_vote_minus_average.append(user_subset[user_index_product_id,ratings_column]-user_average)
+        w.append(w_numerator/np.sqrt(w_active_denominator_factor*w_training_usr_denominator_factor))
+        user_vote_minus_average.append(user_subset[user_index_product_id,ratings_column]-user_average)
 
   #print(w)    
-  k = 1 / np.sum( np.abs(w) )
+  if not(not w):
+    # w is not empty
+    k = 1 / np.sum( np.abs(w) )
   #print(k)
   #print(user_vote_minus_average)
-  estimation =  average_rating_active_user + k* np.dot(w,user_vote_minus_average) 
+  if not(not w or not user_vote_minus_average): 
+    # print("estimation if")
+    # if w and user_vote_minus_average are not both empty, calculate the second term 
+    estimation =  estimation + k* np.dot(w,user_vote_minus_average) 
 
   return estimation
 
 """## REFERENCES:
+
+* https://www.geeksforgeeks.org/python-check-whether-list-empty-not/
 
 * https://stackoverflow.com/questions/21860605/python-remove-lists-from-list-of-lists-similar-functionality-to-pop
 
