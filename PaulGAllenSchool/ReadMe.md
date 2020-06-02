@@ -26,4 +26,4 @@ Since there are two classes websites (one for [spring 2015](https://courses.cs.w
 
     * Projects
 
-        The Collaborative Filtering project can be [found here](https://courses.cs.washington.edu/courses/csep546/17au/psetwww/2/).              
+        The Collaborative Filtering project can be [found here](https://courses.cs.washington.edu/courses/csep546/17au/psetwww/2/).  The dataset can be downloaded in the project webpage.            
