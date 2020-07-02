@@ -26,4 +26,10 @@ Since there are two classes websites (one for [spring 2015](https://courses.cs.w
 
     * Projects
 
-        The Collaborative Filtering project can be [found here](https://courses.cs.washington.edu/courses/csep546/17au/psetwww/2/).  The dataset can be downloaded in the project webpage.            
+        The Collaborative Filtering project can be [found here](https://courses.cs.washington.edu/courses/csep546/17au/psetwww/2/).  The dataset can be downloaded in the project webpage.    
+
+8. _Learning Theory_
+    * Extra Materials
+
+        In the folder ```/books/``` you can find a paper wrote by Cullen Schaffer. It helps explain the "No Free Lunch" Theorem (or _Conservation Law of Generalization Performance_). It can be found [here](http://dml.cs.byu.edu/~cgc/docs/mldm_tools/Reading/LCG.pdf).
+
